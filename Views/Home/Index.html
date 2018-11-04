@@ -1,0 +1,947 @@
+﻿<%@ Page Language="C#" Inherits="System.Web.Mvc.ViewPage<dynamic>" %>
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <title>德州扑克</title>
+    <link href="../../css/base.css" rel="stylesheet">
+    <link href="../../css/fonts.css" rel="stylesheet">
+    <link href="../../css/web20181102.css" rel="stylesheet">
+    <script type="text/javascript" src="../../js/jquery-1.12.1.min.js"></script>
+    <script type="text/javascript" src="../../js/web.js"></script>
+    <script type="text/javascript" src="../../js/jsondata.js"></script>
+
+</head>
+<body>
+<div class="headerbox"></div>
+<div class="header">
+    <div class="columns topline whitecolor  ">
+        <div class="column col-8 ">
+            <i class="mdi mdi-progress-clock"></i>距离<span id="lblGameCode" class="datime redcolor"></span> <span id="lblGameState"></span>
+        </div>
+        <div class="columns col-4 listicon ">
+            <div class="column col-4 ">
+                <i class="greenbk">
+                    <div class="lt-round"></div>
+                    <div class="lt-mask"></div>
+                    <div class="rt-round"></div>
+                    <div class="rt-mask"></div>
+                    <div class="timnumber" id="lblHH">00</div>
+                </i>
+                时
+            </div>
+            <div class="column col-4 ">
+                <i class="greenbk">
+                    <div class="lt-round"></div>
+                    <div class="lt-mask"></div>
+                    <div class="rt-round"></div>
+                    <div class="rt-mask"></div>
+                    <div class="timnumber" id="lblMM">00</div>
+                </i>
+                分
+            </div>
+            <div class="column col-4 ">
+                <i class="greenbk">
+                    <div class="lt-round"></div>
+                    <div class="lt-mask"></div>
+                    <div class="rt-round"></div>
+                    <div class="rt-mask"></div>
+                    <div class="timnumber" id="lblSS">00</div>
+                </i>
+                秒
+            </div>
+        </div>
+    </div>
+    <div class="julebuimg">
+            <img onClick="show('recharge')" src="../../images/club.jpg" height="62rem" />
+        </div>
+    <div class="columns userinfo whitecolor  ">
+        <div class="column col-3 ">
+            <div>
+                <div class="usericon boxshadow">
+                    <img id="txtFace" src="/images/usericon.jpg"/>
+                </div>
+            </div>
+        </div>
+
+        <!--用户信息 -->
+        <div class="column col-9 ">
+            <div>
+                <div>昵称：<span id="txtNickName">游客</span></div>
+                <div>余分：<span id="txtAmount" class="spare">0</span></div>
+                <div class="columns userinfobox ">
+
+                    <div class="column col-4 ">
+                        <button class="btn-sm btn boxshadow whitecolor redbk" onClick="show('.customesbox')">上分/下分</button>
+
+                    </div>                  
+                   
+                    <!--
+                    <div class="column col-7 ">                     
+                       
+                       
+                    </div>
+                    -->
+                </div>
+            </div>
+        </div>
+        <!--用户信息 -->
+        <div class="message whitebk boxshadow blackcolor ">
+            <span id="lblLstTopCode" class="redcolor"></span>
+            <i id="lblLstTopValue" style="width:50px;" ></i>
+            =
+            <span id="lblLstTopMemo"></span>
+            <i class="mdi mdi-chevron-down menudown"></i>
+        </div>
+        <!--往期中奖信息-->
+        <ul id="lblLst" class="message_old whitebk blackcolor">
+            <li>
+                <span class="redcolor">135元/注</span>
+                <i class="orangebk whitecolor">6</i>
+                +<i class="orangebk whitecolor">8</i>
+                +<i class="orangebk whitecolor">9</i>
+                =<i class="greenbk whitecolor">23</i>
+                <span>[大 , 单]</span>
+            </li>
+            <li>
+                <span class="redcolor">135元/注</span>
+                <i class="orangebk whitecolor">6</i>
+                +<i class="orangebk whitecolor">8</i>
+                +<i class="orangebk whitecolor">9</i>
+                =<i class="greenbk whitecolor">23</i>
+                <span>[大 , 单]</span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<!--对话区 -->
+<div class="livearea">
+    <div class="columns">
+        <div id="msg" class="column col-10">
+            <!--
+            <div class="columns livelist">
+                <div class="column col-3">
+                    <div class="live-icon">
+                        <img src="/images/customes.jpg"/>
+                    </div>
+                </div>
+                <div class="column relative col-9 listcoment" style="padding-left: 0">
+                    <i class="mdi mdi-menu-left greencolor "></i>
+                    <div class="username whitecolor">比特币机器人</div>
+                    <div class="comentera boxshadow whitecolor greenbk">
+                        欢迎风中一粒,13和14号是特殊号码，出现13，14同时压大压小，赔率1.6倍。
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="columns livelist">
+                <div class="column col-3">
+                    <div class="live-icon">
+                        <img src="/images/usericon.jpg"/>
+                    </div>
+                </div>
+                <div class="column relative col-9 listcoment" style="padding-left: 0">
+                    <i class="mdi mdi-menu-left violecolor "></i>
+                    <div class="username whitecolor">风中一粒</div>
+                    <div class="comentera boxshadow whitecolor violetbk">
+                        91126期 共下注85
+                        <div class="bluebk betsbox">双110 21t30</div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="columns livelist">
+                <div class="column col-3">
+                    <div class="live-icon">
+                        <img src="/images/usericon.jpg"/>
+                    </div>
+                </div>
+                <div class="column relative col-9 listcoment" style="padding-left: 0">
+                    <i class="mdi mdi-menu-left violecolor "></i>
+                    <div class="username whitecolor">风中一粒</div>
+                    <div class="comentera boxshadow whitecolor violetbk">
+                        91126期 共下注85
+                        <div class="bluebk betsbox">双110 21t30</div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="columns livelist">
+                <div class="column col-3">
+                    <div class="live-icon">
+                        <img src="/images/usericon.jpg"/>
+                    </div>
+                </div>
+                <div class="column relative col-9 listcoment" style="padding-left: 0">
+                    <i class="mdi mdi-menu-left violecolor "></i>
+                    <div class="username whitecolor">风中一粒</div>
+                    <div class="comentera boxshadow whitecolor violetbk">
+                        91126期 共下注85
+                        <div class="bluebk betsbox">双110 21t30</div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="columns livelist">
+                <div class="column col-3">
+                    <div class="live-icon">
+                        <img src="/images/usericon.jpg"/>
+                    </div>
+                </div>
+                <div class="column relative col-9 listcoment" style="padding-left: 0">
+                    <i class="mdi mdi-menu-left violecolor "></i>
+                    <div class="username whitecolor">风中一粒</div>
+                    <div class="comentera boxshadow whitecolor violetbk">
+                        91126期 共下注85
+                        <div class="bluebk betsbox">双110 21t30</div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="columns livelist">
+                <div class="column col-3">
+                    <div class="live-icon">
+                        <img src="/images/usericon.jpg"/>
+                    </div>
+                </div>
+                <div class="column relative col-9 listcoment" style="padding-left: 0">
+                    <i class="mdi mdi-menu-left violecolor "></i>
+                    <div class="username whitecolor">风中一粒</div>
+                    <div class="comentera boxshadow whitecolor violetbk">
+                        91126期 共下注85
+                        <div class="bluebk betsbox">双110 21t30</div>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            -->
+            
+
+        </div>
+        
+
+        <ul class="column col-2 ">
+            <div class="iconmenu">
+                <li class="boxshadow whitebk blackcolor text-center refresh">
+                    <i class="mdi mdi-restart"></i>
+                    刷新
+                </li>
+                <li class="boxshadow whitebk blackcolor text-center customes" onClick="show('.customesbox')">
+                    <i class="mdi mdi-comment-processing-outline"></i>
+                    客服
+                </li>
+                <!--
+                <li class="boxshadow whitebk blackcolor text-center share" onClick="show('.sharebox')">
+                    <i class="mdi mdi-share-variant"></i>
+                    邀请
+                </li>
+                -->
+                <li class="boxshadow whitebk blackcolor text-center edit" onclick="GetRecord()">
+                    <i class="mdi mdi-square-edit-outline"></i>
+                    记录
+                </li>
+            </div>
+        </ul>
+    </div>
+</div>
+
+<div class="bottombox"></div>
+
+<!--客服二维码 -->
+<div class="customesbox">
+    <div class="eqcodebox text-center">
+        <img src="/images/eqcode.jpg"/>
+        <div>识别二维码联系客服</div>
+    </div>
+</div>
+<!--邀请二维码 -->
+<div class="sharebox">
+    <div class="eqcodebox text-center">
+        <div>长按二维码发送给你的朋友</div>
+        <img src="/images/eqcode.jpg"/>
+        <div>邀请受益为竞猜总分的0%</div>
+        <button class="btn btn-primary myuserbox" >查看我的下线（0）</button>
+    </div>
+</div>
+<!--下线数据展示 -->
+<div class="myuser">
+    <div class="listboxtz"></div>
+     <div class="columns imglist">
+         <div class="column col-4">
+             <img src="/images/usericon.jpg" width="100%"/>
+             <div>会员名字</div>
+         </div>
+         <div class="column col-4">
+             <img src="/images/usericon.jpg" width="100%"/>
+             <div>会员名字</div>
+         </div>
+         <div class="column col-4">
+             <img src="/images/usericon.jpg" width="100%"/>
+             <div>会员名字</div>
+         </div>
+         <div class="column col-4">
+             <img src="/images/usericon.jpg" width="100%"/>
+             <div>会员名字</div>
+         </div>
+     </div>
+    <div class="listboxtz"></div>
+</div>
+
+<!--记录数据 -->
+<div class="editbox">
+    <div class="listboxtz"></div>
+    <a class="btn btn-clear whitecolor float-right closebtn" onclick="toggle('#modal-menu','active');" href="#close"></a>
+    <div class="btn-group btnlist jilulist">
+        <button class="btn btn-sm active" onclick="tabshows('.box1')">分数记录</button>
+        <button class="btn btn-sm" onclick="tabshows('.box2')">开奖信息</button>
+    </div>
+    <!--分数记录 -->
+     <div class="editcontent active box1 " >
+         <table class="table table-striped table-hover">
+             <thead>
+             <tr>
+                 <th>日期</th>
+                 <th>分数</th>
+                 <th>具体事项</th>
+             </tr>
+             </thead>
+             <tbody id="lblRecord">
+             <tr >
+                <td id="lblRecordDate1"></td>
+                <td id="lblRecordAmount1"></td>
+                <td id="lblRecrodMemo1"></td>
+             </tr>
+             <tr >
+                <td id="lblRecordDate2"></td>
+                <td id="lblRecordAmount2"></td>
+                <td id="lblRecrodMemo2"></td>
+             </tr>
+             <tr >
+                <td id="lblRecordDate3"></td>
+                <td id="lblRecordAmount3"></td>
+                <td id="lblRecrodMemo3"></td>
+             </tr>
+             <tr >
+                <td id="lblRecordDate4"></td>
+                <td id="lblRecordAmount4"></td>
+                <td id="lblRecrodMemo4"></td>
+             </tr>
+             <tr >
+                <td id="lblRecordDate5"></td>
+                <td id="lblRecordAmount5"></td>
+                <td id="lblRecrodMemo5"></td>
+             </tr>
+
+             </tbody>
+         </table>
+     </div>
+    <!--开奖信息 -->
+    <div class="editcontent box2" >
+        <table class="table table-striped table-hover">
+            <thead>
+            <tr>
+                <th>期数</th>
+                <th>开奖结果</th>
+            </tr>
+            </thead>
+            <tbody id="lblKJ">
+            <tr >
+                <td>2018/04/03</td>
+                <td>上分</td>
+            </tr>
+            <tr >
+                <td>2018/04/03</td>
+                <td>上分</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!--弹层基本框 -->
+<div class="modal " id="modal-menu">
+    <a href="#close" class="modal-overlay" aria-label="Close"></a>
+    <div class="modal-container" style="max-height: 70%; overflow-y: auto">
+
+    </div>
+</div>
+<!--底部下注区 -->
+<div class="footer fixed">
+    <div id="btnTZ" class="btn-block btn  greenbk whitecolor orderbtn" style="display: none">下 注</div>
+    <div id="btnStop" class="btn-block btn  redbk whitecolor"><i class="mdi mdi-lock"></i>停止下注</div>
+    <!--下注隐藏区域 -->
+    <div class="modal " id="model-footer">
+        <a href="#close" class="modal-overlay" aria-label="Close"></a>
+        <div class="xzmenubox  greenbk animates">
+            <a class="btn btn-clear whitecolor float-right closebtn" onclick="toggle('#model-footer','active');" href="#close"></a>
+            <form>
+                <div class="ptboxs active">
+                    <div>
+                        <!--
+                        <div class="btn  btn-primary btn-sm specialcode" onClick="toggle('.tmboxs','active');toggle('.ptboxs','active')">特码</div>
+                        //-->
+                        
+                        <div class="btn  violetbk whitecolor btn-sm clearbox">清空</div>
+                        
+                    </div>
+                    <!--普通码 -->
+                    <div class="columns relative inputlist  text-center " style="margin-left: 0;">
+                        <div class="column col-5" >
+                            <div class="input-group ">
+                                <span class="input-group-addon input-sm">黑色</span>
+                                <input id="txtValueHei" type="number" class="form-input input-sm" placeholder="2倍"/>
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group ">
+                                <span class="input-group-addon input-sm">黑桃</span>
+                                <input id="txtValueHeiTao" type="number" class="form-input input-sm" placeholder="4倍"/>
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group ">
+                                <span class="input-group-addon input-sm">方块</span>
+                                <input id="txtValueFangKuai" type="number" class="form-input input-sm" placeholder="4倍"/>
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group ">
+                                <span class="input-group-addon input-sm">2</span>
+                                <input id="txtValue2" type="number" class="form-input input-sm" placeholder="12倍"/>
+                            </div>
+                            <div class="listboxtz"></div>
+                           <div class="input-group ">
+                                <span class="input-group-addon input-sm">4</span>
+                                <input id="txtValue4" type="number" class="form-input input-sm" placeholder="12倍"/>
+                            </div>
+                            <div class="listboxtz"></div>
+                           <div class="input-group ">
+                                <span class="input-group-addon input-sm">6</span>
+                                <input id="txtValue6" type="number" class="form-input input-sm" placeholder="12倍"/>
+                            </div>
+                            <div class="listboxtz"></div>
+                           <div class="input-group ">
+                                <span class="input-group-addon input-sm">8</span>
+                                <input id="txtValue8" type="number" class="form-input input-sm" placeholder="12倍"/>
+                            </div>
+                            <div class="listboxtz"></div>
+                           <div class="input-group ">
+                                <span class="input-group-addon input-sm">10</span>
+                                <input id="txtValue10" type="number" class="form-input input-sm" placeholder="12倍"/>
+                            </div>
+                            <div class="listboxtz"></div>
+                           <div class="input-group ">
+                                <span class="input-group-addon input-sm">O</span>
+                                <input id="txtValueO" type="number" class="form-input input-sm" placeholder="12倍"/>
+                            </div>
+                            <div class="listboxtz"></div>
+                           <div class="input-group ">
+                                <span class="input-group-addon input-sm">A</span>
+                                <input id="txtValueA" type="number" class="form-input input-sm" placeholder="12倍"/>
+                            </div>
+                            <div class="listboxtz"></div>
+                            
+                            <div class="listboxtz" style="height: 6rem"></div>
+
+                        </div>
+                        <div class="column col-2">
+                        </div>
+                        <div class="column col-5">
+                            <div class="input-group ">
+                                <span class="input-group-addon input-sm">红色</span>
+                                <input id="txtValueHong" type="number" class="form-input input-sm" placeholder="2倍"/>
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group ">
+                                <span class="input-group-addon input-sm">红桃</span>
+                                <input id="txtValueHongTao" type="number" class="form-input input-sm" placeholder="4倍"/>
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group ">
+                                <span class="input-group-addon input-sm">梅花</span>
+                                <input id="txtValueMeiHua" type="number" class="form-input input-sm" placeholder="4倍"/>
+                            </div>
+                            <div class="listboxtz"></div>
+                           <div class="input-group ">
+                                <span class="input-group-addon input-sm">3</span>
+                                <input id="txtValue3" type="number" class="form-input input-sm" placeholder="12倍"/>
+                            </div>
+                            <div class="listboxtz"></div>
+                           <div class="input-group ">
+                                <span class="input-group-addon input-sm">5</span>
+                                <input id="txtValue5" type="number" class="form-input input-sm" placeholder="12倍"/>
+                            </div>
+                            <div class="listboxtz"></div>
+                           <div class="input-group ">
+                                <span class="input-group-addon input-sm">7</span>
+                                <input id="txtValue7" type="number" class="form-input input-sm" placeholder="12倍"/>
+                            </div>
+                            <div class="listboxtz"></div>
+                           <div class="input-group ">
+                                <span class="input-group-addon input-sm">9</span>
+                                <input id="txtValue9" type="number" class="form-input input-sm" placeholder="12倍"/>
+                            </div>
+                            <div class="listboxtz"></div>
+                           <div class="input-group ">
+                                <span class="input-group-addon input-sm">J</span>
+                                <input id="txtValueJ" type="number" class="form-input input-sm" placeholder="12倍"/>
+                            </div>
+                            <div class="listboxtz"></div>
+                           <div class="input-group ">
+                                <span class="input-group-addon input-sm">K</span>
+                                <input id="txtValueK" type="number" class="form-input input-sm" placeholder="12倍"/>
+                            </div>
+                            <div class="listboxtz"></div>
+
+
+                            
+
+                        </div>
+                    </div>
+                </div>
+                <!--特码 -->
+                <div class="tmboxs  ">
+                    <div>
+                        <div class="btn  btn-primary btn-sm backcode" onClick="toggle('.tmboxs','active');toggle('.ptboxs','active')">返回</div>
+
+                        <div class="btn  violetbk whitecolor btn-sm clearbox">清空</div>
+                    </div>
+                    <div class="columns relative  text-center inputlist">
+                        <div class="column col-3">
+                            <div class="input-group ">
+                                <span class="input-group-addon input-sm">0</span>
+                                <input type="text" class="form-input input-sm" placeholder="800倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">4</span>
+                                <input type="text" class="form-input input-sm" placeholder="53倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">8</span>
+                                <input type="text" class="form-input input-sm" placeholder="17倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">12</span>
+                                <input type="text" class="form-input input-sm" placeholder="12倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">16</span>
+                                <input type="text" class="form-input input-sm" placeholder="11倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">20</span>
+                                <input type="text" class="form-input input-sm" placeholder="22倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">24</span>
+                                <input type="text" class="form-input input-sm" placeholder="80倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                        </div>
+                        <div class="column col-3">
+                            <div class="input-group">
+                                <span class="input-group-addon">1</span>
+                                <input type="text" class="form-input input-sm" placeholder="266倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">5</span>
+                                <input type="text" class="form-input input-sm" placeholder="33倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">9</span>
+                                <input type="text" class="form-input input-sm" placeholder="14倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">13</span>
+                                <input type="text" class="form-input input-sm" placeholder="12倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">17</span>
+                                <input type="text" class="form-input input-sm" placeholder="12倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">21</span>
+                                <input type="text" class="form-input input-sm" placeholder="27倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">25</span>
+                                <input type="text" class="form-input input-sm" placeholder="133倍">
+                            </div>
+                            <div class="listboxtz"></div>
+
+                        </div>
+                        <div class="column col-3">
+                            <div class="input-group">
+                                <span class="input-group-addon">2</span>
+                                <input type="text" class="form-input input-sm" placeholder="133倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">6</span>
+                                <input type="text" class="form-input input-sm" placeholder="27倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">10</span>
+                                <input type="text" class="form-input input-sm" placeholder="12倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">14</span>
+                                <input type="text" class="form-input input-sm" placeholder="12倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">18</span>
+                                <input type="text" class="form-input input-sm" placeholder="14倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">22</span>
+                                <input type="text" class="form-input input-sm" placeholder="33倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">26</span>
+                                <input type="text" class="form-input input-sm" placeholder="266倍">
+                            </div>
+                            <div class="listboxtz"></div>
+
+                        </div>
+                        <div class="column col-3">
+                            <div class="input-group">
+                                <span class="input-group-addon">3</span>
+                                <input type="text" class="form-input input-sm" placeholder="80倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">7</span>
+                                <input type="text" class="form-input input-sm" placeholder="22倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">11</span>
+                                <input type="text" class="form-input input-sm" placeholder="12倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">15</span>
+                                <input type="text" class="form-input input-sm" placeholder="10倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">19</span>
+                                <input type="text" class="form-input input-sm" placeholder="17倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">23</span>
+                                <input type="text" class="form-input input-sm" placeholder="53倍">
+                            </div>
+                            <div class="listboxtz"></div>
+                            <div class="input-group">
+                                <span class="input-group-addon">27</span>
+                                <input type="text" class="form-input input-sm" placeholder="800倍">
+                            </div>
+                            <div class="listboxtz" style="height: 6rem"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="btnOK" class="btn clear btn-block btn-primary orderit">确认下注</div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="toast toast-error errorbox"></div>
+<script type="text/javascript" language="javascript">
+
+    PageInit();
+
+    function PageInit() {
+        $.post("/Json/GetLoginState", function (res) {
+
+            //alert(JSON.stringify(res));
+
+            if (res.result == 0) {
+
+                $("#txtFace").attr("src", res.data.Face);
+                $("#txtNickName").html(res.data.NickName);
+                $("#txtAmount").html(res.data.Amount);
+
+                $("#txtSFMemberID").html(res.data.MemberID);
+
+                GetState();
+            } 
+
+        });        
+    }
+
+
+    var LastMessageID = 0;
+    window.setInterval(UpdateMessage, 1000);
+
+    function ShowMessage(Name, Face, Message, Time) {
+        
+        var title = Name + " " + Time;
+        var str = '<!--对话内容区域-机器人 --><div class="columns livelist"><div class="column col-3"><div class="live-icon"><img src="'+Face+'"/></div></div><div class="column relative col-9 listcoment" style="padding-left: 0"><i class="mdi mdi-menu-left greencolor "></i><div class="username whitecolor">' + title + '</div><div class="comentera boxshadow whitecolor greenbk">' + Message + '</div></div><div class="clear"></div></div>';
+
+        $("#msg").append(str);
+
+        ScrollToEnd();
+    }
+
+    function ShowMessageTZ(Name, Face, Message, Time, Code, Amount) {
+
+        var title = Name + " " + Time;
+        var title2 = Code + "期 共下注" + Amount;
+        var str = '<div class="columns livelist"><div class="column col-3"><div class="live-icon"><img src="' + Face + '"/></div></div><div class="column relative col-9 listcoment" style="padding-left: 0"><i class="mdi mdi-menu-left violecolor "></i><div class="username whitecolor">' + title + '</div><div class="comentera boxshadow whitecolor violetbk">' + title2 + '<div class="bluebk betsbox">' + Message + '</div></div></div><div class="clear"></div></div>';
+
+        $("#msg").append(str);
+
+        ScrollToEnd();
+    }
+
+    function UpdateMessage() {
+
+        $.post("/Json/GetMessage/" + LastMessageID, function (res) {
+
+            //alert(JSON.stringify(res));
+
+            var time_sp = res.time.split(':');
+            $("#lblHH").html(time_sp[0]);
+            $("#lblMM").html(time_sp[1]);
+            $("#lblSS").html(time_sp[2]);
+
+
+            if (res.result == 0) {
+
+                //获取消息列表
+                if (res.data.length > 0) {
+                    for (var i = 0; i < res.data.length; i++) {
+                        if (res.data[i].Type == "0") {
+                            ShowMessage(res.data[i]["Name"], res.data[i]["Face"], res.data[i]["Message"], res.data[i]["Time"]);
+                        } else {
+                            ShowMessageTZ(res.data[i]["Name"], res.data[i]["Face"], res.data[i]["Message"], res.data[i]["Time"], res.data[i]["Code"], res.data[i]["Amount"]);
+                        }
+
+
+                        if (res.data[i].IsResult == "1") {
+
+                            PageInit();
+
+                        }
+
+
+                    }
+                    LastMessageID = res.data[res.data.length - 1]["ID"];
+
+                }
+
+                //获取当前投注的期号
+                $("#lblGameCode").html(res.data1.Code + "期");
+                if (res.data1.State == "0") {
+                    $("#lblGameState").html("开始投注");
+                    $("#btnStop").hide();
+                    $("#btnTZ").show();
+
+                } else {
+                    $("#lblGameState").html("停止投注");
+                    $("#btnStop").show();
+                    $("#btnTZ").hide();
+
+                }
+
+            } else {
+                alert(res.msg);
+            }
+
+        });
+
+        
+    }
+
+    function ScrollToEnd() {//滚动到底部
+        var h = $(document).height() - $(window).height();
+        $(document).scrollTop(h);
+    }
+
+
+
+    //确认投注
+    $("#btnOK").click(function () {
+
+
+
+        //先判断登录状态
+        $.post("/Json/GetLoginState", function (res) {
+
+            //alert(JSON.stringify(res));
+
+            if (res.result == 0) {
+
+                var valueHei = $("#txtValueHei").val();
+                var valueHong = $("#txtValueHong").val();
+                var valueHeiTao = $("#txtValueHeiTao").val();
+                var valueHongTao = $("#txtValueHongTao").val();
+                var valueFangKuai = $("#txtValueFangKuai").val();
+                var valueMeiHua = $("#txtValueMeiHua").val();
+                var value2 = $("#txtValue2").val();
+                var value3 = $("#txtValue3").val();
+                var value4 = $("#txtValue4").val();
+                var value5 = $("#txtValue5").val();
+                var value6 = $("#txtValue6").val();
+                var value7 = $("#txtValue7").val();
+                var value8 = $("#txtValue8").val();
+                var value9 = $("#txtValue9").val();
+                var value10 = $("#txtValue10").val();
+                var valueJ = $("#txtValueJ").val();
+                var valueO = $("#txtValueO").val();
+                var valueK = $("#txtValueK").val();
+                var valueA = $("#txtValueA").val();
+
+                if (valueHei == "" && valueHong == "" && valueHeiTao == "" && valueHongTao == "" && valueFangKuai == "" && valueMeiHua == ""
+                && value2 == "" && value3 == "" && value4 == "" 
+                && value5 == "" && value6 == "" && value7 == "" 
+                && value8 == "" && value9 == "" && value10 == ""
+                && valueJ == "" && valueO == "" && valueK == "" && valueA == ""
+                ) {
+                    alert("请输入投注金额");
+                    return;
+                }
+
+                $.post("/Json/TZ",
+                {
+                    ValueHei: valueHei,
+                    ValueHong: valueHong,
+                    ValueHeiTao: valueHeiTao,
+                    ValueHongTao: valueHongTao,
+                    ValueFangKuai: valueFangKuai,
+                    ValueMeiHua: valueMeiHua,
+                    Value2: value2,
+                    Value3: value3,
+                    Value4: value4,
+                    Value5: value5,
+                    Value6: value6,
+                    Value7: value7,
+                    Value8: value8,
+                    Value9: value9,
+                    Value10: value10,
+                    ValueJ: valueJ,
+                    ValueO: valueO,
+                    ValueK: valueK,
+                    ValueA: valueA
+
+                }, function (res) {
+
+                    //alert(JSON.stringify(res));
+
+                    if (res.result == 0) {
+
+                        $("#txtAmount").html(res.data);
+
+                        $('#model-footer').removeClass('active');
+
+                    } else {
+                        alert(res.msg);
+                    }
+                });
+
+
+
+
+            } else {
+                alert("请先登录用户");
+                window.location = '/Home/Login';
+            }
+
+        });
+
+
+    });
+
+    
+    function GetState()
+    {
+
+        $.post("/Json/GetState", function (res1) {
+
+            //alert(JSON.stringify(res1));
+
+            if (res1.result == 0) {
+
+
+
+                //$("#txtAmount").html(res.data1);
+                var str = "";
+                for (var j = 0; j < res1.data.length; j++) {
+                    //alert(j);
+                    if (j == 0) {
+                        $("#lblLstTopCode").html("第" + res1.data[j]["Code"] + "期");
+                        $("#lblLstTopValue").html(res1.data[j]["Value"]);
+                        $("#lblLstTopMemo").html(res1.data[j]["Memo"]);
+                    } else {
+
+                        str += '<li><span class="redcolor">第' + res1.data[j]["Code"] + '期 </span><i style="width:50px;">' + res1.data[j]["Value"] + '</i>=<span> ' + res1.data[j]["Memo"] + '</span></li>';
+                        
+                    }
+                }
+
+                $("#lblLst").html(str);
+
+            }
+        });
+
+    }
+
+
+    function GetRecord() {
+
+        $.post("/Json/GetRecord", function (res1) {
+
+
+            //alert(JSON.stringify(res1));
+
+            if (res1.result == 0) {
+
+                $("#lblRecord").empty();
+                $("#lblKJ").empty();
+
+
+                for (var j = 0; j < res1.data.length; j++) {
+                    $("#lblRecord").append("<tr><td>" + res1.data[j]["AddTime"] + "</td><td>" + res1.data[j]["Amount"] + "</td><td>" + res1.data[j]["Memo"] + "</td></tr>");
+                }
+
+
+                for (var j = 0; j < res1.data1.length; j++) {
+                    $("#lblKJ").append("<tr><td>" + res1.data1[j]["Code"] + "</td><td>" + res1.data1[j]["Value"] + "</td></tr>");
+                }
+
+
+                show('.editbox');
+            } else {
+                if (res1.msg == "请先登录") {
+                    alert("请先登录用户");
+                    window.location = '/Home/Login';
+                }
+            }
+        });
+
+    }
+    
+</script>
+</body>
+</html>
